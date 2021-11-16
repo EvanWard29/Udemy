@@ -15,7 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/about', function () {
+//Route::get('/post/{id}', 'PostsController@index');
+
+Route::resource('posts', 'PostsController');
+
+/*Route::get('/about', function () {
     return "ABOUT PAGE";
 });
 
@@ -31,4 +35,4 @@ Route::get('admin/posts/example', array('as'=>'admin.home', function () {
     $url = route('admin.home');
 
     return "This url is " . $url;
-}));
+}));*/
