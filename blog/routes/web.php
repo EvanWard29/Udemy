@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Post;
+use App\User;
+use App\Country;
+use App\Photo;
+use App\Tag;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +93,7 @@ Route::get('/insert', function () {
 */
 
 //Get all data
-/*Route::get('/read', function(){
+Route::get('/read', function(){
     $posts = Post::all();
 
     foreach($posts as $post){
@@ -98,7 +102,7 @@ Route::get('/insert', function () {
 });
 
 //Get specific record
-Route::get('/find', function(){
+/*Route::get('/find', function(){
     $post = Post::find(2);
 
     return $post->title;
@@ -179,10 +183,110 @@ Route::get('findMore', function(){
     return $post;
 });*/
 
+//Restoring safe deleted data
 /*Route::get('/restore', function(){
     Post::withTrashed()->where('is_admin', 0)->restore();
 });*/
 
-Route::get('/forceDelete', function(){
+//Permenantly deleting data
+/*Route::get('/forceDelete', function(){
     Post::onlyTrashed()->where('id', 7)->forceDelete();
+});*/
+
+/*
+|--------------------------------------------------------------------------
+| ELOQUENT RELATIONSHIPS
+|--------------------------------------------------------------------------
+*/
+
+//One to One Relationship
+/*Route::get('/user/{id}/post', function($id){
+    return User::find($id)->post;
+});*/
+
+//Inverse Relationsip
+/*Route::get('/post/{id}/user', function($id){
+    return Post::find($id)->user->name;
+});*/
+
+//One to Many
+/*Route::get('/posts', function(){
+    $user = User::find(1);
+
+    foreach($user->posts as $post){
+        echo $post->title . "<br>";
+    }
+});*/
+
+//Many to Many Relationship
+/*Route::get('/user/{id}/role', function($id){
+    //Alternative option
+
+    //$user = User::find($id);
+    //foreach($user->roles as $role){
+    //    return $role->name;
+    //};
+
+    $user = User::find($id)->roles()->orderBy('id', 'desc')->get();
+    return $user;
+});
+
+//Accessing the Intermediate/Pivot Table
+Route::get('/user/pivot', function(){
+    $user = User::find(1);
+
+    foreach($user->roles as $role){
+        echo $role->pivot->created_at;
+    }
+});
+
+//Has Many Through Relation
+Route::get('/user/country', function(){
+    $country = Country::find(3);
+
+    foreach($country->posts as $post){
+        return $post->title;
+    }
+});*/
+
+//Polymorphic Relation
+/*Route::get('/user/photos', function(){
+    $user = User::find(1);
+
+    foreach($user->photos as $photo){
+        return $photo->path;
+    }
+});
+
+//Many photos and dynamic selection
+Route::get('/post/{id}/photos', function($id){
+    $post = Post::find($id);
+
+    foreach($post->photos as $photo){
+        echo $photo->path . "<br>";
+    }
+});*/
+
+//Finding Owner of Photo
+/*Route::get('/photo/{id}/post', function($id){
+    $photo = Photo::findOrFail($id);
+
+    return $photo->imageable;
+});*/
+
+//Many to Many Polymorphic Relationship
+/*Route::get('/post/tag', function(){
+    $post = Post::find(1);
+
+    foreach($post->tags as $tag){
+        echo $tag->name;
+    }
+});*/
+
+Route::get('/tag/post', function(){
+    $tag = Tag::find(2);
+
+    foreach($tag->posts as $post){
+        echo $post->title;
+    }
 });
