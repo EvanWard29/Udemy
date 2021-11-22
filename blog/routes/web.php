@@ -297,4 +297,6 @@ Route::get('/post/{id}/photos', function($id){
 |--------------------------------------------------------------------------
 */
 
-Route::resource('/post', 'PostsController');
+Route::group(['middleware'=>'web'], function(){
+    Route::resource('/post', 'PostsController');
+});
