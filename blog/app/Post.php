@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
+    public $directory = "/images/";
     use SoftDeletes;
     /*protected $table = 'posts';
     protected $primaryKey = 'id';*/
@@ -16,7 +17,8 @@ class Post extends Model
     //Enabling Mass Assignment
     protected $fillable = [
         'title',
-        'content'
+        'content',
+        'path'
     ];
 
     public function user(){
@@ -29,5 +31,13 @@ class Post extends Model
 
     public function tags(){
         return $this->morphToMany('App\Tag', 'taggable');
+    }
+
+    public static function scopeLatest($query){
+        return $query->orderBy('id', 'asc')->get();
+    }
+
+    public function getPathAttribute($value){
+        return $this->directory . $value;
     }
 }

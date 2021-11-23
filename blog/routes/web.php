@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
+
 use App\Post;
 use App\User;
 use App\Country;
@@ -291,3 +293,36 @@ Route::get('/post/{id}/photos', function($id){
     }
 });*/
 
+/*
+|--------------------------------------------------------------------------
+| CRUD Application
+|--------------------------------------------------------------------------
+*/
+
+Route::group(['middleware'=>'web'], function(){
+    Route::resource('/post', 'PostsController');
+    
+    Route::get('/dates', function(){
+        //Vanilla PHP
+        /*$date = new DateTime('+1 week');
+        echo $date->format('d-m-y');*/
+
+        //Carbon
+        echo Carbon::now()->addDays(10)->diffForHumans();
+        echo "<br>";
+        echo Carbon::now()->subMonths(5)->diffForHumans();
+        echo "<br>";
+        echo Carbon::now()->yesterday()->diffForHumans();
+    });
+
+    Route::get('/getname', function(){
+        $user = User::find(1);
+        echo $user->name;
+    });
+
+    Route::get('/setname', function(){
+        $user = User::find(1);
+        $user->name = "bob";
+        $user->save();
+    });
+});

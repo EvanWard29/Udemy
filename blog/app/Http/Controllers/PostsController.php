@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Post;
+use App\Http\Requests\CreatePostRequest;
+
 class PostsController extends Controller
 {
     /**
@@ -11,9 +14,12 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        return "TEST " . $id;
+        //$posts = Post::orderBy('id', 'asc')->get();
+        $posts = Post::latest();
+
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -23,7 +29,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return "I am the method that creates stuff";
+        return view('posts.create');
     }
 
     /**
@@ -32,9 +38,47 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreatePostRequest $request)
     {
-        //
+        //return $request->get('title');
+        //return $request->title; //Access as property
+
+        /*$this->validate($request, [
+            'title' => 'required'
+        ]);*/
+
+        //Saving Data
+        //Post::create($request->all());
+
+        //return redirect('/post');
+
+        /*$input = $request->all();
+        $input['title'] = $request->title;
+        Post::create($input);*/
+
+        /*$post = new Post;
+        $post->title = $request->title;
+        $post->save();*/
+
+        //$file = $request->file('file');
+
+        //File Methods For Accessing Data
+        /*echo "<br>";
+        echo $file->getClientOriginalName();
+        echo "<br>";
+        echo $file->getClientSize();*/
+
+        $input = $request->all();
+
+        if($file = $request->file('file')){
+            $name = $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $input['path'] = $name;
+        }
+
+        Post::create($input);
     }
 
     /**
@@ -45,7 +89,8 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        return "This is the show method " . $id;
+        $post = Post::findOrFail($id);
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -56,7 +101,8 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('posts.edit', compact('post'));
     }
 
     /**
@@ -68,7 +114,10 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->update($request->all());
+
+        return redirect('post');
     }
 
     /**
@@ -79,7 +128,9 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::where('id', $id)->delete();
+
+        return redirect('/post');
     }
 
     public function contact(){
