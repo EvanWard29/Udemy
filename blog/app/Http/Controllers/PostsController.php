@@ -48,9 +48,9 @@ class PostsController extends Controller
         ]);*/
 
         //Saving Data
-        Post::create($request->all());
+        //Post::create($request->all());
 
-        return redirect('/post');
+        //return redirect('/post');
 
         /*$input = $request->all();
         $input['title'] = $request->title;
@@ -59,6 +59,26 @@ class PostsController extends Controller
         /*$post = new Post;
         $post->title = $request->title;
         $post->save();*/
+
+        //$file = $request->file('file');
+
+        //File Methods For Accessing Data
+        /*echo "<br>";
+        echo $file->getClientOriginalName();
+        echo "<br>";
+        echo $file->getClientSize();*/
+
+        $input = $request->all();
+
+        if($file = $request->file('file')){
+            $name = $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $input['path'] = $name;
+        }
+
+        Post::create($input);
     }
 
     /**

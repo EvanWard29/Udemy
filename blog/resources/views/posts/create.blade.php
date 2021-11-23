@@ -4,10 +4,13 @@
 
     <h1>Create</h1>
 
-    {!! Form::open(['method'=>'POST', 'action'=>'PostsController@store'])!!}
+    {!! Form::open(['method'=>'POST', 'action'=>'PostsController@store', 'files'=>true])!!}
         <div class="form-group">
             {!! Form::label('title', 'Title:') !!}
             {!! Form::text('title', null, ['class'=>'form-control']) !!}
+        </div>
+        <div class="form-group">
+            {!! Form::file('file', ['class'=>'form-control']) !!}
         </div>
 
         <!--<input type="text" name="title" placeholder="Enter Title">-->
