@@ -15,13 +15,9 @@ use Illuminate\Support\Facades\Mail;
 */
 
 Route::get('/', function () {
-    $data = [
-        'title' => 'Email Title',
-        'content' => 'This is the Email Content'
-    ];
+    $data = ['title' => 'When are you coming back?', 'content' => 'I was nearby and I couldn\'t get a hold of you?'];
 
     Mail::send('emails.test', $data, function($message){
-        $message->to('Evan29Ward@gmail.com', 'Evan')->subject("This is the Subject"); //Hardcoding inputs
-
+        $message->to('Evan29Ward@gmail.com', 'Evan')->subject('Hello how are you?');
     });
 });
