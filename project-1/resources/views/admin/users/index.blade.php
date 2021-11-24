@@ -1,12 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+@extends('layouts.admin')
+
+
+
+@section('content')
+
+    <h1>Users</h1>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Active</th>
+            <th>Created</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+            @if($users)
+                @foreach($users as $user)
+                    <tr>
+                        <td>{{$user->id}}</td>
+                        <td>{{$user->name}}</td>
+                        <td>{{$user->email}}</td>
+                        <td>{{$user->role->name}}</td>
+                        @if($user->is_active == 1)
+                            <td>True</td>
+                        @else
+                            <td>False</td>
+                        @endif
+                        <td>{{$user->created_at->diffForHumans()}}</td> <!-- Using Carbon to format dates -->
+                        <td>{{$user->updated_at}}</td> <!-- Unformated dates -->
+                    </tr>
+                @endforeach
+            @endif
+        </tbody>
+      </table>
+@stop
