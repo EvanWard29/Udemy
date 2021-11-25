@@ -23,7 +23,8 @@
                 @foreach($users as $user)
                     <tr>
                         <td>{{$user->id}}</td>
-                        <td>{{$user->name}}</td>
+                        <td><img height="50" src="{{$user->photo ? $user->photo->file : '/images/placeholder.jpg'}}"></td>
+                        <td><a href="{{route('users.edit', $user->id)}}">{{$user->name}}</a></td>
                         <td>{{$user->email}}</td>
                         <td>{{$user->role->name}}</td>
                         @if($user->is_active == 1)
