@@ -4,12 +4,19 @@
 
 @section('content')
 
+    @if(Session::has('deleted_user'))
+
+        <p class="bg-danger">{{session('deleted_user')}}</p>
+
+    @endif
+
     <h1>Users</h1>
 
     <table class="table">
         <thead>
           <tr>
             <th>ID</th>
+            <th>Photo</th>
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
@@ -33,7 +40,7 @@
                             <td>False</td>
                         @endif
                         <td>{{$user->created_at->diffForHumans()}}</td> <!-- Using Carbon to format dates -->
-                        <td>{{$user->updated_at}}</td> <!-- Unformated dates -->
+                        <td>{{$user->updated_at->diffForHumans()}}</td> <!-- Unformated dates -->
                     </tr>
                 @endforeach
             @endif

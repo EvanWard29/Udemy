@@ -15,6 +15,7 @@
                     @endif
 
                     You are logged in!
+                    <p><a href="/admin">Admin Page</a></p>
                 </div>
             </div>
         </div>
