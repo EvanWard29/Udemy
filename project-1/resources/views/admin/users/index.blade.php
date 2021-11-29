@@ -35,9 +35,9 @@
                         <td>{{$user->email}}</td>
                         <td>{{$user->role->name}}</td>
                         @if($user->is_active == 1)
-                            <td>True</td>
+                            <td>Active</td>
                         @else
-                            <td>False</td>
+                            <td>Inactive</td>
                         @endif
                         <td>{{$user->created_at->diffForHumans()}}</td> <!-- Using Carbon to format dates -->
                         <td>{{$user->updated_at->diffForHumans()}}</td> <!-- Unformated dates -->

@@ -36,7 +36,7 @@
 
                 <div class="form-group">
                     {!! Form::label('is_active', 'Status:') !!}
-                    {!! Form::select('is_active', array(1 => 'Active', 0 => 'Inactive'), 0, ['class'=>'form-control']) !!}
+                    {!! Form::select('is_active', array(1 => 'Active', 0 => 'Inactive'), ['class'=>'form-control']) !!}
                 </div>
 
                 <div class="form-group">
