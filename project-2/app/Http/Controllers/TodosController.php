@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Todo;
+use DateTime;
 use Illuminate\Http\Request;
 
 class TodosController extends Controller
@@ -13,7 +15,9 @@ class TodosController extends Controller
      */
     public function index()
     {
-        //
+        $todos = Todo::all();
+
+        return view('todo.index', compact('todos'));
     }
 
     /**
@@ -23,7 +27,7 @@ class TodosController extends Controller
      */
     public function create()
     {
-        //
+        return view('todo.create');
     }
 
     /**
@@ -34,7 +38,9 @@ class TodosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Todo::create($request->all());
+
+        return redirect('/todos');
     }
 
     /**
