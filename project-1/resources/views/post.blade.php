@@ -59,7 +59,7 @@
             <!-- Comment -->
             <div class="media">
                 <a class="pull-left" href="#">
-                    <img height="64" class="media-object" src="{{$comment->photo}}" alt="">
+                    <img height="64" class="media-object" src="{{$comment->photo ? $comment->photo : '/images/placeholder.jpg'}}" alt="">
                 </a>
                 <div class="media-body">
                     <h4 class="media-heading">{{$comment->author}}
@@ -93,7 +93,7 @@
                                 <!-- Nested Comment -->
                                 <div style="margin-top: 60px" class="media">
                                     <a class="pull-left" href="#">
-                                        <img height="64" class="media-object" src="{{$reply->photo}}" alt="">
+                                        <img height="64" class="media-object" src="{{$reply->photo ? $reply->photo : '/images/placeholder.jpg'}}" alt="">
                                     </a>
                                     <div class="media-body">
                                         <h4 class="media-heading">{{$reply->author}}

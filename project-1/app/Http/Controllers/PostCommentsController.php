@@ -42,11 +42,17 @@ class PostCommentsController extends Controller
     {
         $user = Auth::user();
 
+        if($user->photo){
+            $photo = $user->photo->file;
+        }else{
+            $photo = "";
+        }
+
         $data = [
             'post_id' => $request->post_id,
             'author' => $user->name,
             'email' => $user->email,
-            'photo' => $user->photo->file,
+            'photo' => $photo,
             'body' => $request->body
         ];
 
