@@ -21,7 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'MessageController@index')->name('home');
-Route::get('/create{id?}/{subject?}', 'MessageController@create')->name('create'); 
+Route::get('/create/{id?}/{subject?}', 'MessageController@create')->name('create'); 
 Route::post('/send', 'MessageController@send')->name('send');
 Route::get('/sent', 'MessageController@sent')->name('sentMessages');
 Route::get('/read/{id}', 'MessageController@read')->name('read');

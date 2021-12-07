@@ -24,7 +24,7 @@ class MessageController extends Controller
         if ($id == 0){
             $users = User::where('id', '!=', Auth::id())->pluck('email', 'id');
         } else{
-            $users = User::where('id', Auth::id())->pluck('email', 'id');
+            $users = User::where('id', $id)->pluck('email', 'id');
         }
 
         if($subject != ""){
