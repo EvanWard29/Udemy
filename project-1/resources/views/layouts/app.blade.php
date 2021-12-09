@@ -29,14 +29,14 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        Project-1
                     </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;
+                        
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -77,4 +77,15 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
+<!-- Footer -->
+<footer class="page-footer font-small blue fixed-bottom">
+
+  <!-- Copyright -->
+  <div class="text-center py-3">
+    <a href="/"> Back To Project List</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
 </html>
