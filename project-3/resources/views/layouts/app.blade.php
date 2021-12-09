@@ -50,6 +50,11 @@
                             Deleted Messages
                         </a>
                     </ul>
+					<ul class="nav navbar-nav">
+                        <li class="nav-item"><a class="navbar-brand" href="/">
+                            Back To Project List
+                        </a></li>
+                    </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
@@ -83,7 +88,7 @@
             </div>
         </nav>
 
-        @if(url()->current() != "http://127.0.0.1:8000/login" && url()->current() != "http://127.0.0.1:8000/register")
+        @if(!(str_contains(Request::fullUrl(), 'project-3/public/login')) && !(str_contains(Request::fullUrl(), 'project-3/public/register')))
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
