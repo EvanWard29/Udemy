@@ -13,14 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/albums', 'AlbumsController@index');
-Route::get('/albums/create', 'AlbumsController@create');
-Route::get('/albums/{id}', 'AlbumsController@show');
+Route::get('/', 'AlbumsController@index');
+Route::get('/albums', 'AlbumsController@index')->name('albums');
+Route::get('/albums/create', 'AlbumsController@create')->name('create');
+Route::get('/albums/{id}', 'AlbumsController@show')->name('show_album');
 
 Route::post('/albums/store', 'AlbumsController@store');
 
-Route::get('/photos/create/{id}', 'PhotosController@create');
-Route::get('/photos/{id}', 'PhotosController@show');
+Route::get('/photos/create/{id}', 'PhotosController@create')->name('upload');
+Route::get('/photos/{id}', 'PhotosController@show')->name('show_photo');
 Route::delete('/photos/{id}', 'PhotosController@destroy');
 
 Route::post('/photos/store', 'PhotosController@store');

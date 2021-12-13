@@ -8,8 +8,8 @@
                 <div class="row">
                     <div class="col text-center">
                         <br>
-                        <a href="/albums/{{$album->id}}">
-                            <img class="img-thumbnail" src="/storage/cover_images/{{$album->cover_image}}" alt="{{$album->name}}">
+                        <a href="{{route('show_album', $album->id)}}">
+                            <img class="img-thumbnail" src="/project-6/public/storage/cover_images/{{$album->cover_image}}" alt="{{$album->name}}">
                         </a>
                         <br>
                         

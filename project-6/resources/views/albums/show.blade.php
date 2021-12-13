@@ -2,8 +2,8 @@
 
 @section('content')
     <h1>{{$album->name}}</h1>
-    <a href="/albums" class="btn btn-secondary">Go Back</a>
-    <a class="btn btn-primary" href="/photos/create/{{$album->id}}">Upload Photo To Album</a>
+    <a href="{{route('albums')}}" class="btn btn-secondary">Go Back</a>
+    <a class="btn btn-primary" href="{{route('upload', $album->id)}}">Upload Photo To Album</a>
     <hr>
     @if (count($album->photos) > 0)
         <div id="albums">
@@ -11,8 +11,8 @@
                 <div class="row">
                     <div class="col text-center">
                         <br>
-                        <a href="/photos/{{$photo->id}}">
-                            <img class="img-thumbnail" src="/storage/photos/{{$album->id}}/{{$photo->photo}}" alt="{{$photo->title}}">
+                        <a href="{{route('show_photo', $photo->id)}}">
+                            <img class="img-thumbnail" src="/project-6/public/storage/photos/{{$album->id}}/{{$photo->photo}}" alt="{{$photo->title}}">
                         </a>
                         <br>
                         

@@ -34,6 +34,8 @@ class PhotosController extends Controller
 
         $album_id = $photo->album_id;
 
+        unlink(public_path() . '/storage/photos/' . $album_id . '/' . $photo->photo);
+
         $photo->delete();
 
         return redirect('/albums/' . $album_id);
