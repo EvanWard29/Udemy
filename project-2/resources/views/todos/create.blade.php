@@ -21,3 +21,7 @@
         </div>
     {!! Form::close() !!}
 @endsection
+
+@section('javascript')
+    
+@endsection

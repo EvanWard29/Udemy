@@ -27,7 +27,9 @@ class TodosController extends Controller
      */
     public function create()
     {
-        return view('todos.create');
+        $timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+
+        return view('todos.create', compact('timezones'));
     }
 
     /**
@@ -42,9 +44,11 @@ class TodosController extends Controller
             'text' => 'required'
         ]);
 
-        Todo::create($request->all());
+        return $request->all();
 
-        return redirect(route('todo.index'));
+        //Todo::create($request->all());
+
+        //return redirect(route('todo.index'));
     }
 
     /**

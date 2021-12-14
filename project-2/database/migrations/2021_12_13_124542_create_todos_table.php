@@ -17,7 +17,7 @@ class CreateTodosTable extends Migration
             $table->increments('id');
             $table->string('text');
             $table->mediumText('body');
-            $table->date('due');
+            $table->dateTimeTz('due');
             $table->timestamps();
         });
     }
