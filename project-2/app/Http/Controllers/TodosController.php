@@ -17,7 +17,10 @@ class TodosController extends Controller
     {
         $todos = Todo::orderBy('due', 'asc')->get();
 
-        return view('todos.index', compact('todos'));
+        $phpLocale = 'en-GB';
+        $carbonLocale = '14';
+
+        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale'));
     }
 
     /**
@@ -44,11 +47,9 @@ class TodosController extends Controller
             'text' => 'required'
         ]);
 
-        return $request->all();
+        Todo::create(['text'=>$request->text, 'body'=>$request->body, 'due'=>$request->date.' '.$request->time]);
 
-        //Todo::create($request->all());
-
-        //return redirect(route('todo.index'));
+        return redirect(route('todo.index'));
     }
 
     /**
@@ -102,5 +103,16 @@ class TodosController extends Controller
         Todo::find($id)->delete();
 
         return redirect(route('todo.index'))->with('success', 'Task Successfully Removed!');
+    }
+
+    public function locale(Request $request){
+        $todos = Todo::orderBy('due', 'asc')->get();
+
+        $phpLocale = $request->phpLocale;
+        $carbonLocale = $request->carbonLocale;
+
+        //return $request->getPreferredLanguage(); //Get user's locale/preferredLanguage from HTTP request
+
+        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale'));
     }
 }
