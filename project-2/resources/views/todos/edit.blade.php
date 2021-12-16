@@ -13,8 +13,12 @@
             {!! Form::textarea('body', null, ['class'=>'form-control']) !!}
         </div>
         <div class='form-group'>
-            {!! Form::label('due', 'Due:') !!}
-            {!! Form::date('due', null, ['class'=>'form-control']) !!}
+            {!! Form::label('date', 'Date:') !!}
+            {!! Form::date('date', explode(' ', $todo->due)[0], ['class'=>'form-control']) !!}
+        </div>
+        <div class='form-group'>
+            {!! Form::label('time', 'Time:') !!}
+            {!! Form::time('time', explode(' ', $todo->due)[1], ['class'=>'form-control']) !!}
         </div>
         <div class='form-group'>
             {!! Form::submit('Save', ['class'=>'btn btn-primary']) !!}

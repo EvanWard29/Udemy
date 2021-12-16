@@ -129,6 +129,8 @@ class TodosController extends Controller
     {
         $todo = Todo::find($id);
 
+        explode(' ', $todo->due);
+
         return view('todos.edit', compact('todo'));
     }
 
@@ -141,7 +143,7 @@ class TodosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Todo::find($id)->update($request->all());
+        Todo::find($id)->update(['text'=>$request->text, 'body'=>$request->body, 'due'=>$request->date.' '.$request->time]);
 
         return redirect(route('todo.index'))->with('success', 'Task Successfully Updated!');
     }
