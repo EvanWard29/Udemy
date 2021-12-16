@@ -1,16 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
-    <?php
-        use Carbon\Carbon;
-
-        $due = new Carbon($todo->due);
-    ?>
+    <?php use Carbon\Carbon; $due = Carbon::parse($todo->due); ?>
     <a href="{{route('todo.index')}}" class="btn btn-default">Go Back</a>
 
     <h1>{{$todo->text}}</h1>
-    <div class="badge {{$due->lt(new Carbon()) ? 'bg-danger' : 'bg-info'}}">{{$due->diffForHumans()}}</div>
-    <div class="badge bg-primary">{{$due->formatLocalized('%A %d %B %Y')}}</div>
+    <div class="badge {{$due->lt(new Carbon()) ? 'bg-danger' : 'bg-info'}}">{{$diff_browserLocale}}</div>
+    <div class="badge bg-primary">{{$date_local}}</div>
+
+    <!-- Date in US or UK format sent from server -->
+    <div class="badge {{$due->lt(new Carbon()) ? 'bg-danger' : 'bg-info'}}">{{$date_12}}</div>
+
+    <!-- Date in US or UK format sent from server -->
+    <div class="badge {{$due->lt(new Carbon()) ? 'bg-danger' : 'bg-info'}}">{{$date_24}}</div>
         
     <hr>
 

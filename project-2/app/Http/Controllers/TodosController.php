@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+Carbon::setUtf8(true); //Enable UTF-8 Characters for Carbon
+
 use App\Todo;
 
 class TodosController extends Controller
@@ -20,7 +23,14 @@ class TodosController extends Controller
         $phpLocale = 'en-GB';
         $carbonLocale = '14';
 
-        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale'));
+        $browserLocale = 0;
+
+        $localePreferences = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        if(is_array($localePreferences) && count($localePreferences) > 0) {
+            $browserLocale = $localePreferences[0];
+        }
+
+        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale', 'browserLocale'));
     }
 
     /**
@@ -62,7 +72,51 @@ class TodosController extends Controller
     {
         $todo = Todo::findOrFail($id);
 
-        return view("todos.show", compact('todo'));
+        $twelve_hour_format = true; //Auth::user()->twelve_hour_format;
+
+        $date_12 = null;
+        $date_24 = null;
+
+        $localePreferences = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        if(is_array($localePreferences) && count($localePreferences) > 0) {
+            $browserLocale = $localePreferences[0];
+            
+            setLocale(LC_TIME, $browserLocale); //Set PHP's locale to browser's preffered
+
+            /* Carbon 1 has limited locale options, and doesn't support region specific, only the base locale. Eg. it supports 'fr' but not 'fr-FR' */
+            //Get base locale of browser's preffered locale and set that to Carbon's locale
+            Carbon::setLocale(substr($browserLocale, 0, 2));
+
+            if($browserLocale == "en-GB"){
+                //Return UK format
+                if($twelve_hour_format == true){
+                    //If user has 12-hour format selected
+                    $date_12 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %I:%M %p'); //12-Hour Format
+                }else{
+                    //Otherwise shwo 24-hour format
+                    $date_24 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %H:%M'); //24-Hour Format
+                }
+            }else if($browserLocale == "en-US"){
+                //Return US format
+                if($twelve_hour_format == true){
+                    //If user has 12-hour format selected
+                    $date_12 = Carbon::parse($todo->due)->formatLocalized('%m-%d-%Y %I:%M %p'); //12-Hour Format
+                }else{
+                    //Otherwise shwo 24-hour format
+                    $date_24 = Carbon::parse($todo->due)->formatLocalized('%m-%d-%Y %H:%M'); //24-Hour Format
+                }
+            }else{
+                //Return a default format
+                $date_12 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %I:%M %p'); //UK Date & 12-Hour Format As Default
+                $date_24 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %H:%M'); //UK Date & 24-Hour Format As Default
+            }
+        }
+
+        $diff_browserLocale = Carbon::parse($todo->due)->diffForHumans();
+
+        $date_local = Carbon::parse($todo->due)->formatLocalized('%A %d %B %Y');        
+
+        return view("todos.show", compact('todo', 'date_12', 'date_24', 'diff_browserLocale', 'date_local'));
     }
 
     /**
@@ -111,8 +165,8 @@ class TodosController extends Controller
         $phpLocale = $request->phpLocale;
         $carbonLocale = $request->carbonLocale;
 
-        //return $request->getPreferredLanguage(); //Get user's locale/preferredLanguage from HTTP request
+        $browserLocale = str_replace('_', '-', $request->getPreferredLanguage());
 
-        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale'));
+        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale', 'browserLocale'));
     }
 }
