@@ -18,3 +18,7 @@ Route::get('/', 'TodosController@index');
 Route::resource('/todo', 'TodosController');
 
 Route::post('/todos/locale/', 'TodosController@locale');
+
+Route::get('/testFormatting', 'TodosController@testFormatting')->name('testFormatting');
+
+Route::post('/testFormating', 'TodosController@format');

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
-Carbon::setUtf8(true); //Enable UTF-8 Characters for Carbon
 
 use App\Todo;
 
@@ -170,5 +169,59 @@ class TodosController extends Controller
         $browserLocale = str_replace('_', '-', $request->getPreferredLanguage());
 
         return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale', 'browserLocale'));
+    }
+
+    public function testFormatting(){
+        return view('testFormatting');
+    }
+
+    public function format(Request $request){
+        $date = $request->date . $request->time;
+        $locale = $request->locale;
+        $isTwelveHour = $request->twelveHour;
+
+        return $this->formatDate($date, $locale, $isTwelveHour);
+    }
+
+    function formatDate($date, $locale = 'en_GB', $isTwelveHour = false){
+        //Carbon 1 only supports the base locale. Eg. 'en' rather than 'en_US'
+        $carbonLocale = explode('_', $locale)[0];
+
+        //Set locale to use
+        setLocale(LC_TIME, $carbonLocale);
+        Carbon::setLocale($carbonLocale);
+
+        Carbon::setUtf8(true); //Enable UTF-8 Characters for Carbon
+
+        if($locale == "en_US"){
+            //Use US Format
+            if($isTwelveHour){
+                //Return 12-Hour Format
+                $formattedDate = Carbon::parse($date)->formatLocalized('%m-%d-%Y %I:%M %p');
+            }else{
+                //Return Default 24-Hour Format
+                $formattedDate = Carbon::parse($date)->formatLocalized('%m-%d-%Y %H:%M');
+            }
+        }else{
+            //Use defualt UK format
+            if($isTwelveHour){
+                //Return 12-Hour Format
+                $formattedDate = Carbon::parse($date)->formatLocalized('%d-%m-%Y %I:%M %p');
+
+                //Check if locale supports AM/PM in it's correct language
+                if($formattedDate[strlen($formattedDate)-1] == " "){
+                    //locale doesn't support AM/PM in it's correct language - use English default 'AM/PM'.
+                    setLocale(LC_TIME, 'en');
+                    Carbon::setLocale('en');
+
+                    $formattedDate = Carbon::parse($date)->formatLocalized('%d-%m-%Y %I:%M %p');
+                }
+            }else{
+                //Return Default 24-Hour Format
+                $formattedDate = Carbon::parse($date)->formatLocalized('%d-%m-%Y %H:%M');
+            }
+        }
+
+        return $formattedDate;
     }
 }

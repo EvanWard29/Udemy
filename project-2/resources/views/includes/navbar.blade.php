@@ -14,6 +14,9 @@
             <a class="nav-link" href="{{route('todo.create')}}">New Todo</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{route('testFormatting')}}">formatDate</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="/">Back To Project List</a>
           </li>
         </ul>
