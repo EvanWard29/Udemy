@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Todo;
-use DateTime;
 use Illuminate\Http\Request;
+
+use Carbon\Carbon;
+Carbon::setUtf8(true); //Enable UTF-8 Characters for Carbon
+
+use App\Todo;
 
 class TodosController extends Controller
 {
@@ -15,9 +18,19 @@ class TodosController extends Controller
      */
     public function index()
     {
-        $todos = Todo::all();
+        $todos = Todo::orderBy('due', 'asc')->get();
 
-        return view('todo.index', compact('todos'));
+        $phpLocale = 'en-GB';
+        $carbonLocale = '14';
+
+        $browserLocale = 0;
+
+        $localePreferences = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        if(is_array($localePreferences) && count($localePreferences) > 0) {
+            $browserLocale = $localePreferences[0];
+        }
+
+        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale', 'browserLocale'));
     }
 
     /**
@@ -27,7 +40,9 @@ class TodosController extends Controller
      */
     public function create()
     {
-        return view('todo.create');
+        $timezones = \DateTimeZone::listIdentifiers(\DateTimeZone::ALL);
+
+        return view('todos.create', compact('timezones'));
     }
 
     /**
@@ -38,9 +53,13 @@ class TodosController extends Controller
      */
     public function store(Request $request)
     {
-        Todo::create($request->all());
+        $this->validate($request, [
+            'text' => 'required'
+        ]);
 
-        return redirect('/todos');
+        Todo::create(['text'=>$request->text, 'body'=>$request->body, 'due'=>$request->date.' '.$request->time]);
+
+        return redirect(route('todo.index'));
     }
 
     /**
@@ -51,7 +70,53 @@ class TodosController extends Controller
      */
     public function show($id)
     {
-        //
+        $todo = Todo::findOrFail($id);
+
+        $twelve_hour_format = true; //Auth::user()->twelve_hour_format;
+
+        $date_12 = null;
+        $date_24 = null;
+
+        $localePreferences = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        if(is_array($localePreferences) && count($localePreferences) > 0) {
+            $browserLocale = $localePreferences[0];
+            
+            setLocale(LC_TIME, $browserLocale); //Set PHP's locale to browser's preffered
+
+            /* Carbon 1 has limited locale options, and doesn't support region specific, only the base locale. Eg. it supports 'fr' but not 'fr-FR' */
+            //Get base locale of browser's preffered locale and set that to Carbon's locale
+            Carbon::setLocale(substr($browserLocale, 0, 2));
+
+            if($browserLocale == "en-GB"){
+                //Return UK format
+                if($twelve_hour_format == true){
+                    //If user has 12-hour format selected
+                    $date_12 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %I:%M %p'); //12-Hour Format
+                }else{
+                    //Otherwise shwo 24-hour format
+                    $date_24 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %H:%M'); //24-Hour Format
+                }
+            }else if($browserLocale == "en-US"){
+                //Return US format
+                if($twelve_hour_format == true){
+                    //If user has 12-hour format selected
+                    $date_12 = Carbon::parse($todo->due)->formatLocalized('%m-%d-%Y %I:%M %p'); //12-Hour Format
+                }else{
+                    //Otherwise shwo 24-hour format
+                    $date_24 = Carbon::parse($todo->due)->formatLocalized('%m-%d-%Y %H:%M'); //24-Hour Format
+                }
+            }else{
+                //Return a default format
+                $date_12 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %I:%M %p'); //UK Date & 12-Hour Format As Default
+                $date_24 = Carbon::parse($todo->due)->formatLocalized('%d-%m-%Y %H:%M'); //UK Date & 24-Hour Format As Default
+            }
+        }
+
+        $diff_browserLocale = Carbon::parse($todo->due)->diffForHumans();
+
+        $date_local = Carbon::parse($todo->due)->formatLocalized('%A %d %B %Y');        
+
+        return view("todos.show", compact('todo', 'date_12', 'date_24', 'diff_browserLocale', 'date_local'));
     }
 
     /**
@@ -62,7 +127,11 @@ class TodosController extends Controller
      */
     public function edit($id)
     {
-        //
+        $todo = Todo::find($id);
+
+        explode(' ', $todo->due);
+
+        return view('todos.edit', compact('todo'));
     }
 
     /**
@@ -74,7 +143,9 @@ class TodosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Todo::find($id)->update(['text'=>$request->text, 'body'=>$request->body, 'due'=>$request->date.' '.$request->time]);
+
+        return redirect(route('todo.index'))->with('success', 'Task Successfully Updated!');
     }
 
     /**
@@ -85,6 +156,19 @@ class TodosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Todo::find($id)->delete();
+
+        return redirect(route('todo.index'))->with('success', 'Task Successfully Removed!');
+    }
+
+    public function locale(Request $request){
+        $todos = Todo::orderBy('due', 'asc')->get();
+
+        $phpLocale = $request->phpLocale;
+        $carbonLocale = $request->carbonLocale;
+
+        $browserLocale = str_replace('_', '-', $request->getPreferredLanguage());
+
+        return view('todos.index', compact('todos', 'phpLocale', 'carbonLocale', 'browserLocale'));
     }
 }
